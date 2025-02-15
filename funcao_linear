@@ -1,0 +1,276 @@
+from manim import *
+import math
+
+class funcao_linear(Scene):
+    def construct(self):
+        
+        # Cena Inicial
+
+        # Título Inicial
+        titulo = Text("Função Linear", color=WHITE, font_size=40).move_to(7*UP).scale(2)
+
+        # Equação Inicial
+        equacao1 = MathTex(r'y = a \cdot x + b', color=WHITE).next_to(titulo, 15*DOWN).scale(2.5)
+
+        # Circulando as variáveis x e y
+        retangulo1 = SurroundingRectangle(equacao1[0][0:1], color=YELLOW, buff=0.2)
+        retangulo2 = SurroundingRectangle(equacao1[0][4:5], color=RED_E, buff=0.2)
+        vgrupo_ret0 = VGroup(retangulo1, retangulo2)
+
+        # Legenda das variáveis
+        coef01 = Tex("imagem", color=YELLOW, font_size=40).next_to(equacao1[0][0:1], 12*DOWN+2*RIGHT)
+        coef02 = Tex("domínio", color=RED_E, font_size=40).next_to(equacao1[0][4:5], 13*DOWN)
+        vgrupo_coef0 = VGroup(coef01, coef02)
+
+        # Setas das variáveis
+        seta1 = Arrow(start=coef01.get_top() + 2*LEFT, end=equacao1[0][0:1].get_bottom(), color=YELLOW, buff=0.1)
+        seta2 = Arrow(start=coef02.get_top() + RIGHT, end=equacao1[0][4:5].get_bottom(), color=RED_E, buff=0.1)
+        vgrupo_seta0 = VGroup(seta1, seta2)
+
+        # Comentário sobre as variáveis
+        comentario0 = Text("x e y são variáveis reais", font_size=40, color=WHITE)
+
+        # Circulando os coeficientes a e b
+        retangulo3 = SurroundingRectangle(equacao1[0][2:3], color=BLUE, buff=0.2)
+        retangulo4 = SurroundingRectangle(equacao1[0][6:7], color=GREEN, buff=0.2)
+        vgrupo_ret12 = VGroup(retangulo3, retangulo4)
+
+        # Legenda dos coeficientes
+        coef11 = Tex("coeficiente", color=BLUE, font_size=40)
+        coef12 = Tex("angular", color=BLUE, font_size=40)
+        vgrupo_coef1 = VGroup(coef11, coef12).arrange(DOWN, buff=0.2).next_to(equacao1[0][2:3], 12*DOWN)
+
+        coef21 = Tex("coeficiente", color=GREEN, font_size=40)
+        coef22 = Tex("linear", color=GREEN, font_size=40)
+        vgrupo_coef2 = VGroup(coef21, coef22).arrange(DOWN, buff=0.2).next_to(equacao1[0][5:6], 12*DOWN)
+
+        vgrupo_coef12 = VGroup(vgrupo_coef1, vgrupo_coef2)
+
+        # Comentario sobre os coeficientes
+        comentario12 = Text("a e b são constantes reais", font_size=40, color=WHITE)
+
+        # Setas dos coeficientes
+        seta3 = Arrow(start=vgrupo_coef1.get_top(), end=equacao1[0][2:3].get_bottom(), color=BLUE, buff=0.1)
+        seta4 = Arrow(start=vgrupo_coef2.get_top(), end=equacao1[0][6:7].get_bottom(), color=GREEN, buff=0.1)
+        vgrupo_seta12 = VGroup(seta3, seta4)
+
+        # Escalando o tamanho das letras da slegendas e dos comentários
+        vgrupo_coef12 = VGroup(vgrupo_coef0, vgrupo_coef12).scale(2)
+        vgrupo_comentarios = VGroup(comentario0, comentario12).next_to(titulo, 48*DOWN).scale(1.5)
+
+        # Animando 
+        self.play(Write(titulo), Write(equacao1))
+        self.wait() 
+        self.play(Create(vgrupo_ret0))
+        self.play(Write(vgrupo_coef0), Create(vgrupo_seta0), Write(comentario0))
+        self.wait(2)
+
+        # Destacando as variaveis
+        self.play(Indicate(equacao1[0][0:1], color=YELLOW, scale_factor=1.5))
+        self.play(Indicate(equacao1[0][4:5], color=RED_E, scale_factor=1.5))
+
+        self.play(FadeOut(vgrupo_ret0), FadeOut(vgrupo_seta0), Unwrite(vgrupo_coef0), Unwrite(comentario0))
+        self.play(Create(vgrupo_ret12))
+        self.play(Write(vgrupo_coef12), Create(vgrupo_seta12), Write(comentario12))
+        self.wait(2)
+
+        # Destacando os coeficientes
+        self.play(Indicate(equacao1[0][2:3], color=BLUE, scale_factor=1.5))
+        self.play(Indicate(equacao1[0][6:7], color=GREEN, scale_factor=1.5))
+
+        self.play(FadeOut(vgrupo_ret12), FadeOut(vgrupo_seta12), 
+                  Unwrite(vgrupo_coef12), Unwrite(comentario12))
+        self.wait()
+
+
+        #cena 2
+        
+        #exemplo de função
+        equacao2 = MathTex(r'y = 2x + 1', color=WHITE).next_to(titulo, 15*DOWN).scale(2.5)
+
+        #adicionando na tela
+        self.play(Transform(equacao1, equacao2))
+        self.wait()
+
+
+        #criando tabelas
+        passo = 1
+
+        # Gerar os valores de x e y
+        xs = [round(-3 + i * passo, 4) for i in range(int((4 - (-3)) / passo) + 1)]
+        dados_completos = [[str(x), str(2 * x + 1)] for x in xs]
+
+        # Dividir os dados em duas partes
+        meio = math.ceil(len(dados_completos) / 2)
+        dados_esquerda = dados_completos[:meio]
+        dados_direita = dados_completos[meio:]
+
+        # Criar a tabela da parte esquerda
+        tabela_esquerda = Table(
+            dados_esquerda,
+            col_labels=[Text("x", color=YELLOW), Text("y", color=RED_E)],
+            include_outer_lines=True,
+            line_config={"stroke_width": 2, "color": WHITE},
+            v_buff=0.5,
+            h_buff=1
+        )
+
+        # Criar a tabela da parte direita
+        tabela_direita = Table(
+            dados_direita,
+            col_labels=[Text("x", color=YELLOW), Text("y", color=RED_E)],
+            include_outer_lines=True,
+            line_config={"stroke_width": 2, "color": WHITE},
+            v_buff=0.5,
+            h_buff=1.3
+        )
+
+        colunas1 = tabela_esquerda.get_columns()
+        colunas1[0].set_color(YELLOW)
+        colunas1[1].set_color(RED_E)
+
+        colunas2 = tabela_direita.get_columns()
+        colunas2[0].set_color(YELLOW)
+        colunas2[1].set_color(RED_E)
+
+        # Posicionar as tabelas lado a lado
+        tabelas = VGroup(tabela_esquerda, tabela_direita)
+        tabelas.arrange(RIGHT, buff=1).scale(1.2)  # Espaço de 1 unidade entre elas
+        tabelas.move_to(4*DOWN)
+
+        # Animação para exibir as tabelas
+        self.play(Create(tabelas))
+        self.wait(2)
+        self.play(Uncreate(tabelas), FadeOut(equacao1))
+        self.wait()
+
+
+        # cena 3
+
+        #criando eixos e títulos
+        eixos = Axes(
+            x_range=[-5,5,1],
+            y_range=[-5,5,1],
+            x_length=6,
+            y_length=6, 
+            axis_config={'color':WHITE, 'include_ticks':True},
+            tips=True).next_to(titulo, 16*DOWN)
+
+        labels_eixos = eixos.get_axis_labels(x_label='x', y_label='y')
+        
+        vgrupo_cena2 =VGroup(eixos, labels_eixos).scale(1.9)
+
+        self.play(Create(eixos), Write(labels_eixos))
+        self.wait()
+
+        # Criação dos labels das variáveis 
+        label_x = MathTex("x = ", color=YELLOW)
+        valor_x = DecimalNumber(0, num_decimal_places=0, color=YELLOW)
+        label_y = MathTex("y = ", color=RED_E)
+        valor_y = DecimalNumber(0, num_decimal_places=0, color=RED_E)
+
+        # Agrupando e posicionando os labels com os valores
+        grupo_x = VGroup(label_x, valor_x).arrange(RIGHT)
+        grupo_y = VGroup(label_y, valor_y).arrange(RIGHT)
+        vgroup_xy = VGroup(grupo_x, grupo_y).arrange(DOWN, buff=0.2)
+        vgroup_xy.to_corner(UP + LEFT).shift(RIGHT).scale(1.3)
+
+        # Adicionando na cena 
+        self.add(vgroup_xy)
+
+        #função que plotará os pontos da tabela 
+
+        def pontos():
+
+            # Listas para armazenar os objetos que queremos remover depois
+            pontos_eixos = []
+            linhas_verticais = []
+            linhas_horizontais = []
+            pontos_grafico = []
+
+            for i in range(len(dados_completos) - 2):
+                # Converte os valores de x e y para float
+                x = float(dados_completos[i][0])
+                y = float(dados_completos[i][1])
+
+                # Pontos que percorrem os eixos (agora não utilizam always_redraw)
+                ponto_eixo_x = Dot(
+                    eixos.c2p(x, 0),
+                    color=RED_E,
+                    radius=0.08
+                )
+                ponto_eixo_y = Dot(
+                    eixos.c2p(0, y),
+                    color=YELLOW,
+                    radius=0.08
+                )
+
+                # Linha guia até os eixos
+                linha_vertical = eixos.get_vertical_line(
+                    eixos.c2p(x, y), 
+                    color=WHITE, stroke_width=2
+                )
+                linha_horizontal = eixos.get_horizontal_line(
+                    eixos.c2p(x, y), 
+                    color=WHITE, stroke_width=2
+                )
+
+                # Cria o ponto no gráfico
+                dot = Dot(
+                    point=eixos.coords_to_point(x, y),
+                    color=LIGHT_BROWN,
+                    fill_opacity=0.7,
+                    radius=0.7
+                )
+
+                # Atualiza os valores de x e y dinamicamente
+                valor_x.set_value(x)
+                valor_y.set_value(y)
+
+                # Anima o ponto aparecendo no gráfico
+                self.play(Create(ponto_eixo_x), Create(ponto_eixo_y), Write(linha_horizontal), Write(linha_vertical), FadeIn(dot),
+                          run_time=0.5)
+                self.wait(0.5)
+
+                # Adiciona os objetos às listas
+                pontos_eixos.append(ponto_eixo_x)
+                pontos_eixos.append(ponto_eixo_y)
+                linhas_verticais.append(linha_vertical)
+                linhas_horizontais.append(linha_horizontal)
+                pontos_grafico.append(dot)
+
+            # Remover os objetos da cena depois que o loop terminar
+            self.play(Uncreate(VGroup(*pontos_eixos)), Uncreate(VGroup(*linhas_verticais)), Uncreate(VGroup(*linhas_horizontais)))
+
+            # Retorna o grupo para que possamos usá-lo fora da função
+            return VGroup(*pontos_grafico)
+
+
+        #definindo função exemplo e adicionando seu label 
+        funcao1 = eixos.plot(lambda x: 2*x + 1, x_range=[-3,2], color=LIGHT_BROWN, stroke_width=6)
+        label_funcao1 = MathTex(r'y = 2x + 1', font_size=40, color = LIGHT_BROWN)
+        label_funcao1.move_to(3.4*RIGHT+3*DOWN).scale(1.5)
+        self.add(label_funcao1)
+
+        #animando valores da tabela
+        grupo_pontos = pontos()
+        
+        #adicionando a função exemplo 
+        self.play(Create(funcao1))
+        self.play(label_funcao1.animate.move_to(3.4*RIGHT+3*UP), FadeOut(vgroup_xy), Uncreate(grupo_pontos))
+        self.wait()
+
+        #cena 4
+
+        #funções e labels
+        funcao2 = eixos.plot(lambda x: -x -2 , x_range=[-4.5,3], color=YELLOW, stroke_width=6)
+        funcao3 = eixos.plot(lambda x: -1, x_range=[-4.5,4], color=PURPLE, stroke_width=6)
+        
+        label_funcao2 = MathTex(r'y = - x - 2', font_size=40, color = YELLOW)
+        label_funcao2.move_to(3.4*RIGHT+3.8*DOWN).scale(1.5)
+        label_funcao3 = MathTex(r'y = - 1', font_size=40, color = PURPLE)
+        label_funcao3.move_to(3.4*RIGHT+1.3*DOWN).scale(1.5)
+
+        #adicionando funções exemplos
+        self.play(Create(funcao2), Write(label_funcao2), Create(funcao3), Write(label_funcao3))
+        self.wait(3)
