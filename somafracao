@@ -1,0 +1,333 @@
+from manim import *
+
+class SomaFrac2(Scene):
+    def construct(self):
+     #cena inicial
+
+        #título inicial
+        titulo = Text("Soma de Frações", color=WHITE, font_size = 40).move_to(7*UP).scale(2)
+
+        #equação inicial
+        equacao1 = MathTex(r'\frac{a}{b}', color=WHITE).next_to(titulo, 21*DOWN).scale(2.7)
+
+        #selecionando os termos a e b da equação 
+        a_part = equacao1[0][0]
+        b_part = equacao1[0][2]
+
+        #comentário inicial
+        comentario1 = Tex("a e b são números inteiros", color=WHITE, font_size = 40)
+        comentario1.next_to(titulo, 48*DOWN).scale(2.1)
+
+        #comentario sobre a 
+        nome1 = Tex("Numerador", color=PINK, font_size = 40).next_to(a_part,5*LEFT)
+        nome2 = Tex("Denominador", color=YELLOW, font_size = 40).next_to(b_part,5*LEFT)
+        vgrupo_nomes = VGroup(nome1, nome2).scale(2)
+
+        #circulando coeficientes equação
+        retangulo1 = SurroundingRectangle(a_part, color=PINK, buff=0.2)
+        retangulo2 = SurroundingRectangle(b_part, color=YELLOW, buff=0.2)
+        vgrupo_ret = VGroup(retangulo1, retangulo2).shift(2.5*RIGHT)
+
+        # Criando setas conectando os retângulos aos textos
+        seta1 = Arrow(start= nome1.get_corner(RIGHT), 
+                      end = a_part.get_corner(LEFT) + 2*RIGHT, 
+                      color=PINK)
+        seta2 = Arrow(start= nome2.get_corner(RIGHT), 
+                      end = b_part.get_corner(LEFT) + 2*RIGHT,
+                      color=YELLOW)
+        vgrupo_setas = VGroup(seta1, seta2)
+        
+        #cena inicial
+        self.play(Write(titulo))
+        self.play(FadeIn(equacao1, shift=UP))
+
+        # Comentário
+        self.play(Write(comentario1))
+        self.wait()
+
+        # nome dos elmentos da fração
+        self.play(equacao1.animate.shift(2.5*RIGHT))
+        self.play(Create(retangulo1), 
+                  Write(nome1), 
+                  a_part.animate.set_color(PINK), 
+                  Create(seta1))
+        self.wait()
+        self.play(Create(retangulo2),
+                b_part.animate.set_color(YELLOW),
+                Write(nome2),
+                Create(seta2))
+        self.wait(2)
+
+        self.play(FadeOut(vgrupo_ret),
+                  FadeOut(vgrupo_setas),
+                  FadeOut(vgrupo_nomes), 
+                  FadeOut(comentario1),
+                  FadeOut(equacao1)
+                  )  
+       
+        #cena 3
+               
+        equacao41 = MathTex(r'\frac{1}{3}', color=WHITE)
+        equacao42 = MathTex(r'+', color=WHITE)
+        equacao43 = MathTex(r'\frac{3}{4}', color=WHITE)
+        vgroup_eq4 = VGroup(equacao41, equacao42, equacao43)
+        vgroup_eq4.arrange(RIGHT, buff=0.8).next_to(titulo, 10*DOWN).scale(2.5)
+
+        #selecionando os termos 
+        a_part = equacao41[0][0]
+        b_part = equacao41[0][2]
+        c_part = equacao43[0][0]
+        d_part = equacao43[0][2]
+
+
+        #self.play(vgroup_eq2.animate.move_to(3*UP), FadeOut(comentario2))
+        self.play(Create(vgroup_eq4))
+        self.wait()
+
+        #criando pontos
+
+        a = 3/4
+        b = 1
+
+
+        A = np.array([0, 0, 0]) 
+        B = np.array([0, a, 0]) 
+        C = np.array([0, 2*a, 0]) 
+        D = np.array([0, 3*a, 0])
+        E = np.array([0, 4*a, 0])
+
+        F = np.array([b, 4*a, 0])
+        G = np.array([2*b, 4*a, 0])
+
+        H = np.array([3*b, 4*a, 0]) 
+        I = np.array([3*b, 3*a, 0])
+        J = np.array([3*b, 2*a, 0])
+        K = np.array([3*b, a, 0])
+        L = np.array([3*b, 0, 0])
+
+        M = np.array([2*b, 0, 0])    
+        N = np.array([b, 0, 0])
+
+        O = np.array([b, a, 0])
+        P = np.array([b, 2*a, 0])
+        Q = np.array([b, 3*a, 0])
+
+        R = np.array([2*b, a, 0])
+        S = np.array([2*b, 2*a, 0])
+        U = np.array([2*b, 3*a, 0])
+
+        #criando quadrados maiores
+        quadrado1 = Polygon(A, E, H, L, color=RED, fill_opacity=0).set_stroke(RED, width=6) 
+        quadrado2 = Polygon(A, E, H, L, color=RED, fill_opacity=0).set_stroke(RED, width=6) 
+        vgroup_quadrados = VGroup(quadrado1, quadrado2) 
+
+        #criando retas
+        reta1 = Line(B,K, color = YELLOW)
+        reta2 = Line(C,J, color = YELLOW)
+        reta3 = Line(D,I, color = YELLOW)
+        reta4 = Line(F,N, color = YELLOW)
+        reta5 = Line(G,M, color = YELLOW)
+
+        reta6 = Line(B,K, color = YELLOW)
+        reta7 = Line(C,J, color = YELLOW)
+        reta8 = Line(D,I, color = YELLOW)
+        reta9 = Line(F,N, color = YELLOW)
+        reta10 = Line(G,M, color = YELLOW)
+
+        vgroup_retas = VGroup(reta4, reta5)
+        vgroup_retas2 = VGroup(reta1, reta2, reta3)
+        vgroup_retas3 = VGroup(reta9, reta10)
+        vgroup_retas4 = VGroup(reta6, reta7, reta8)
+
+        #criando retângulos que ficam no interior dos quadrados maiores
+        retangulo11 = Polygon(A, E, F, N, color=PINK, fill_opacity=0).set_stroke(WHITE, width=1)
+
+        retangulo21 = Polygon(D, E, H, I, color=PINK, fill_opacity=0).set_stroke(WHITE, width=1)
+        retangulo22 = Polygon(D, I, J, C, color=PINK, fill_opacity=0).set_stroke(WHITE, width=1)
+        retangulo23 = Polygon(C, J, K, B, color=PINK, fill_opacity=0).set_stroke(WHITE, width=1)
+        
+        #equação envolvendo os quadrados maiores
+        equacao5 = MathTex(r'+', color=WHITE).scale(2.5)
+        vgroup_equa_quad = VGroup(quadrado1, equacao5, quadrado2)
+        vgroup_equa_quad.arrange(RIGHT, buff=1).next_to(vgroup_eq4, 7*DOWN)
+        
+        #posicionado retas e retângulos
+        vgroup_retas.move_to(vgroup_equa_quad[0].get_center())
+        vgroup_retas2.move_to(vgroup_equa_quad[2].get_center())
+    
+        retangulo11.move_to(vgroup_equa_quad[0].get_edge_center(LEFT)+b/2*RIGHT)
+        retangulo21.move_to(vgroup_equa_quad[2].get_top()+a/2*DOWN)
+        retangulo22.move_to(vgroup_equa_quad[2].get_top()+3*a/2*DOWN)
+        retangulo23.move_to(vgroup_equa_quad[2].get_top()+5*a/2*DOWN)
+
+        vgroup_retangulo = VGroup(retangulo21, retangulo22, retangulo23)
+
+        #posicionando quadrado maiores, retas, retângulos       
+        self.play(Create(vgroup_equa_quad))
+        #self.add(vgroup_retangulo)
+        self.play(FadeIn(vgroup_retas))
+        self.play(retangulo11.animate.set_fill(opacity=0.3))
+        self.play(a_part.animate.set_color(PINK), b_part.animate.set_color(YELLOW))
+        self.add(vgroup_equa_quad[0], vgroup_retas)
+        self.wait()
+        self.play(FadeIn(vgroup_retas2))
+        self.play(retangulo21.animate.set_fill(opacity=0.3))
+        self.play(retangulo22.animate.set_fill(opacity=0.3))
+        self.play(retangulo23.animate.set_fill(opacity=0.3))
+        self.add(vgroup_equa_quad[2], vgroup_retas2)
+        self.play(c_part.animate.set_color(PINK), d_part.animate.set_color(YELLOW))
+        self.wait()
+
+        #comentários sobre os denominadore
+        comentario2 = Tex("Igualando os denominadores", color=WHITE, font_size = 40)
+        comentario2.next_to(titulo, 48*DOWN).scale(2.1)
+        self.play(Write(comentario2))
+        self.wait()
+
+        comentario3 = Tex("MMC (3,4) = 12", color=WHITE, font_size = 40)
+        comentario3.next_to(titulo, 48*DOWN).scale(1.8)
+        self.play(FadeOut(comentario2))
+        self.play(Write(comentario3))
+        self.wait()
+
+        # Alterando o denominador de 3 para 12
+        novo_denominador1 = MathTex(r'\frac{1}{12}', color=WHITE)
+        novo_denominador1.move_to(equacao41).scale(2.5)
+
+        novo_denominador2 = MathTex(r'\frac{3}{12}', color=WHITE)
+        novo_denominador2.move_to(equacao43).scale(2.5)  # Mantém a mesma posição
+
+        #trocando a cor de alguns termos
+        novo_denominador1[0][0].set_color(PINK)
+        novo_denominador1[0][2].set_color(YELLOW)
+        novo_denominador1[0][3].set_color(YELLOW)
+        novo_denominador2[0][0].set_color(PINK)
+        novo_denominador2[0][2].set_color(YELLOW)
+        novo_denominador2[0][3].set_color(YELLOW)
+
+        # Fazendo a transição para o novo denominador
+        self.play(ReplacementTransform(equacao41, novo_denominador1), ReplacementTransform(equacao43, novo_denominador2))
+        self.wait()
+
+        # atualizando o interior dos quadrados maiores de acordo com o mmc 
+        vgroup_retas4.move_to(vgroup_equa_quad[0].get_center())
+        vgroup_retas3.move_to(vgroup_equa_quad[2].get_center())
+        self.play(FadeIn(vgroup_retas3), FadeIn(vgroup_retas4))
+        self.wait()
+
+    
+        
+        
+
+        #cena 4
+
+        comentario4 = Tex("Atualizando os numeradores", color=WHITE, font_size = 40)
+        comentario4.next_to(titulo, 48*DOWN).scale(2.1)
+        self.play(FadeOut(comentario3))
+        self.play(Write(comentario4))
+
+        quadrado11 = Polygon(A, B, O, N, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=1)
+        quadrado12 = Polygon(B, C, P, O, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=1)
+        quadrado13 = Polygon(C, D, Q, P, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=1)
+        quadrado14 = Polygon(D, E, F, Q, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=1)
+
+        quadrado21 = Polygon(B, C, P, O, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado22 = Polygon(C, D, Q, P, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado23 = Polygon(D, E, F, Q, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado24 = Polygon(O, P, S, R, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado25 = Polygon(P, Q, U, S, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado26 = Polygon(Q, F, G, U, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado27 = Polygon(R, S, J, K, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado28 = Polygon(S, U, I, J, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        quadrado29 = Polygon(U, G, H, I, color=PINK, fill_opacity=0).set_stroke(YELLOW, width=4)
+        
+
+        vgroup_quadrados1 = VGroup(quadrado11, quadrado12, quadrado13, quadrado14)
+        vgroup_quadrados1.move_to(vgroup_equa_quad[0].get_edge_center(LEFT)+b/2*RIGHT)
+
+        vgroup_quadrados2 = VGroup(quadrado21, quadrado22, quadrado23, 
+                                   quadrado24, quadrado25, quadrado26, 
+                                   quadrado27, quadrado28, quadrado29)
+        vgroup_quadrados2.move_to(vgroup_equa_quad[2].get_edge_center(LEFT)+3*b/2*RIGHT+a/2*UP)
+
+        vgroup_quadrados12 = VGroup(vgroup_quadrados1, vgroup_quadrados2)
+
+        self.add(vgroup_quadrados12, vgroup_equa_quad[0], vgroup_equa_quad[2])
+        self.wait()
+
+        # Destacando quadrados menores no quadrado maior 1
+        self.play(quadrado11.animate.set_opacity(0.4), run_time = 0.55)
+        self.play(quadrado12.animate.set_opacity(0.4), run_time = 0.45)
+        self.play(quadrado13.animate.set_opacity(0.4), run_time = 0.35)
+        self.play(quadrado14.animate.set_opacity(0.4), run_time = 0.25)
+
+        
+        # Alterando o denominador de 1 para 4
+        novo_numerador1 = MathTex(r'\frac{4}{12}', color=WHITE)
+        novo_numerador1.move_to(novo_denominador1).scale(2.5)
+
+        # Trocando a cor de alguns termos
+        novo_numerador1[0][0].set_color(PINK)
+        novo_numerador1[0][2].set_color(YELLOW)
+        novo_numerador1[0][3].set_color(YELLOW)
+
+        # Fazendo a transição para o novo denominador
+        self.play(ReplacementTransform(novo_denominador1, novo_numerador1))
+        self.wait()
+
+        # Destacando quadrados menores no quadrado maior 2
+        self.play(quadrado21.animate.set_opacity(0.4), run_time=0.55) 
+        self.play(quadrado22.animate.set_opacity(0.4), run_time=0.5)
+        self.play(quadrado23.animate.set_opacity(0.4), run_time=0.45)
+        self.play(quadrado26.animate.set_opacity(0.4), run_time=0.4)
+        self.play(quadrado25.animate.set_opacity(0.4), run_time=0.35)
+        self.play(quadrado24.animate.set_opacity(0.4), run_time=0.3) 
+        self.play(quadrado27.animate.set_opacity(0.4), run_time=0.25)
+        self.play(quadrado28.animate.set_opacity(0.4), run_time=0.2)
+        self.play(quadrado29.animate.set_opacity(0.4), run_time=0.15)
+
+        # Alterando o numerador de 3 para 9
+        novo_numerador2 = MathTex(r'\frac{9}{12}', color=WHITE)
+        novo_numerador2.move_to(novo_denominador2).scale(2.5)
+
+        # Trocando a cor de alguns termos
+        novo_numerador2[0][0].set_color(PINK)
+        novo_numerador2[0][2].set_color(YELLOW)
+        novo_numerador2[0][3].set_color(YELLOW)
+
+        # Fazendo a transição para o novo denominador
+        self.play(ReplacementTransform(novo_denominador2, novo_numerador2))
+        self.wait()
+
+        #criando um vgroup de todos os objetos em cena parte central
+        #vgroup_final = VGroup(novo_numerador1, novo_denominador2, vgroup_eq4[1], 
+                              #vgroup_equa_quad, vgroup_retas, vgroup_retangulo,
+                              #vgroup_quadrados12)
+
+        # Comentário final
+        comentario5 = Tex("Realizando a soma", color=WHITE, font_size = 40)
+        comentario5.next_to(titulo, 48*DOWN).scale(2.1)
+
+        # Retirando o comentário
+        self.play(FadeOut(comentario4))
+        self.play(Write(comentario5))
+
+        # Equação final
+        equacao_final = MathTex(r'\frac{13}{12}', color=WHITE)
+        equacao_final.next_to(vgroup_equa_quad, 11*DOWN).scale(2.5)
+
+        # Trocando a cor de alguns termos
+        equacao_final[0][0].set_color(PINK)
+        equacao_final[0][1].set_color(PINK)
+        equacao_final[0][3].set_color(YELLOW)
+        equacao_final[0][4].set_color(YELLOW)
+
+        # Animando a resposta final 
+        self.play(FadeOut(comentario5))
+        self.play(Create(equacao_final))
+        
+        ## Circulando os coeficientes a e b
+        retangulo_final = SurroundingRectangle(equacao_final, color=RED, buff=0.2)
+
+        self.play(FadeIn(retangulo_final))
+        self.wait(2)
