@@ -1,0 +1,266 @@
+class Primos(Scene):
+    def construct(self):
+
+        # Cena Inicial
+
+        # Função para criar textos com um padrão
+        def criar_texto(conteudo, tamanho=40):
+            return Tex(conteudo, color=WHITE, font_size=tamanho)
+
+        # Título Inicial
+        titulo = criar_texto("Números Primos").move_to(7*UP).scale(2.7) 
+
+        #Animando
+        self.add(titulo)
+
+        # Criando os números para a tabela
+        numbers = [[str(5 * row + col + 1) for col in range(5)] for row in range(6)]
+
+        # Substituindo o último número (30) por "..."
+        numbers[-1][-1] = "..."
+        
+        # Criando uma tabela vazia de 5 colunas e 6 linhas
+        tabela = Table(
+            numbers,  # Matriz vazia 6x5
+            include_outer_lines=True,
+            line_config={"stroke_width": 2, "color": WHITE},
+            v_buff=0.8,
+            h_buff=1.1 
+        ).shift(0.6*UP)
+
+        # Comentários 
+        comentario = criar_texto("Conjunto dos Números Naturais")
+
+        comentario2 = criar_texto("Organizado em primos e compostos")
+        comentario2[0][12:18].set_color(BLUE)
+        comentario2[0][19:28].set_color(GREEN)
+
+        vgrupo_comentarios = VGroup(comentario, comentario2)
+        vgrupo_comentarios.next_to(titulo, 48*DOWN).scale(1.6)
+        
+        #Animando tabela e comentários
+        self.play(FadeIn(tabela))
+        self.play(Write(comentario))
+        self.wait(2)
+
+        self.play(FadeOut(comentario))
+        self.play(Write(comentario2))
+        self.wait(2)
+
+
+        # Função para verificar se um número é primo
+        def eh_primo(n):
+            if n < 2:
+                return False
+            for i in range(2, int(n**0.5) + 1):
+                if n % i == 0:
+                    return False
+            return True
+
+        # Trocando as cores dos números 
+        for row in range(6):
+            for col in range(5):
+                cell = tabela.get_entries()[row * 5 + col]
+                numero = numbers[row][col]
+                
+                # Verifica se o conteúdo da célula é um número (ignora "...")
+                if numero.isdigit():
+                    n = int(numero)
+
+                    if n==1:
+                        nova_cor = cell.get_color()
+                    else:    
+                        nova_cor = BLUE if eh_primo(n) else GREEN  # Define a cor com base no tipo do número
+                    
+                    nova_celula = cell.copy().set_color(nova_cor)  # Cria uma cópia da célula com a nova cor
+
+                    # Anima a mudança de cor
+                    self.play(Transform(cell, nova_celula), run_time=0.2)
+        
+        self.wait(2) 
+        self.play(FadeOut(comentario2))
+
+        # Definição primo
+        def1 = criar_texto("Divisível apenas por 1 e ele próprio").set_color(BLUE)
+        def1.next_to(titulo, 48*DOWN).scale(1.6)
+
+        #Animando definição primo
+        self.play(Write(def1))
+        
+        # Destacando números primos
+        def destacar_primos(tabela):
+            """Aplica a animação Indicate apenas nos números primos."""
+            prime_cells = []
+            for row in range(6):
+                for col in range(5):
+                    cell = tabela.get_entries()[row * 5 + col]
+                    numero = numbers[row][col]
+            
+                    if numero.isdigit() and eh_primo(int(numero)):
+                        prime_cells.append(Indicate(cell, color=BLUE, scale_factor=1.4))
+            
+            self.play(*prime_cells, run_time=1.7)
+    
+            
+        destacar_primos(tabela)
+        self.wait()
+        self.play(FadeOut(def1))
+
+        # Definição composto
+        def2 = criar_texto("Divisível por três ou mais números").set_color(GREEN)
+        def2.next_to(titulo, 48*DOWN).scale(1.6)
+
+        #Animando definição primo
+        self.play(Write(def2))
+        self.wait()
+
+        # Destacando números primos
+        def destacar_compostos(tabela):
+            """Aplica a animação Indicate apenas nos números compostos."""
+            compostos_cells = []
+            for row in range(6):
+                for col in range(5):
+                    cell = tabela.get_entries()[row * 5 + col]
+                    numero = numbers[row][col]
+            
+                    if numero.isdigit(): 
+                        numero = int(numero)
+                        if eh_primo(numero) == False and numero > 1:
+                            compostos_cells.append(Indicate(cell, color=GREEN, scale_factor=1.4))
+            
+            self.play(*compostos_cells, run_time=1.7)
+    
+            
+        destacar_compostos(tabela)
+        self.wait()
+
+        # Retirando elementos da tela 
+        self.play(FadeOut(tabela), FadeOut(def2))
+        self.wait()
+        
+        
+
+        # Cena 2
+        
+        # Exemplos
+        exemplo1 = criar_texto("2  - divisível por 1 e 2")
+        exemplo2 = criar_texto("4  - divisível por 1, 2 e 4")
+        exemplo3 = criar_texto("5  - divisível por 1 e 5")
+        exemplo4 = criar_texto("6  - divisível por 1, 2, 3 e 6")
+        exemplo5 = criar_texto("7  - divisível por 1 e 7")
+        exemplo6 = criar_texto("12  - divisível por 1, 2, 3, 4, 6 e 12")
+
+        # Agrupando e organizando verticalmente
+        vgrupo_exemplos = VGroup(exemplo1, exemplo2, exemplo3, 
+                                 exemplo4, exemplo5, exemplo6).arrange(DOWN, buff=0.8)
+
+        # Alinhando todos os exemplos à esquerda, usando o primeiro como referência
+        for exemplo in [exemplo2, exemplo3, exemplo4, exemplo5, exemplo6]:
+            exemplo.align_to(exemplo1, LEFT)
+        vgrupo_exemplos.to_edge(LEFT).shift(LEFT).next_to(titulo, 18*DOWN).scale(1.6)
+
+        # Alterando a cor
+        exemplo1[0][0:1].set_color(BLUE)
+        exemplo2[0][0:1].set_color(GREEN)
+        exemplo3[0][0:1].set_color(BLUE)
+        exemplo4[0][0:1].set_color(GREEN)
+        exemplo5[0][0:1].set_color(BLUE)
+        exemplo6[0][0:2].set_color(GREEN)
+        
+        # Animando
+        self.play(Write(exemplo1),
+                  Write(exemplo2),
+                  Write(exemplo3),
+                  Write(exemplo4),
+                  Write(exemplo5),
+                  Write(exemplo6))
+        self.wait(3)
+        self.play(FadeOut(vgrupo_exemplos))
+        self.wait()
+
+
+        # cena 3
+
+        #Teorema
+        teorema1 = criar_texto("Todo número natural maior do que 1")
+        teorema2 = criar_texto("pode ser escrito de forma única")
+        teorema3 = criar_texto("como um produto de números primos")
+        vgrupo_teorema = VGroup(teorema1, teorema2, teorema3).arrange(DOWN, buff=0.3)
+        vgrupo_teorema.next_to(titulo, 10*DOWN).scale(1.7)
+
+        definicao_teorema = criar_texto("Teorema Fundamental da Aritmética").set_color(WHITE)
+        definicao_teorema.next_to(titulo, 48*DOWN).scale(1.6)
+
+        equacao = MathTex(r'a = p_1 \cdot p_2 \cdot p_3 \cdot ... \cdot p_n', color=WHITE)
+        equacao.next_to(vgrupo_teorema, 12*DOWN).scale(1.7)
+
+        retangulo = SurroundingRectangle(equacao, color=WHITE, buff=0.3, fill_opacity = 0)
+
+        # Animando teorema
+        self.play(Write(vgrupo_teorema))
+        self.play(teorema1[0][0:].animate.set_color(RED_E), 
+                  teorema3[0][6:29].animate.set_color(BLUE))
+        self.wait()
+        self.play(Write(definicao_teorema))
+        self.wait()
+        self.play(Create(equacao))
+        self.play(equacao[0][0:1].animate.set_color(RED_E),
+                  equacao[0][2:4].animate.set_color(BLUE),
+                  equacao[0][5:7].animate.set_color(BLUE),
+                  equacao[0][8:10].animate.set_color(BLUE),
+                  equacao[0][15:17].animate.set_color(BLUE),
+                  FadeIn(retangulo))
+        self.wait(2)
+        self.play(FadeOut(equacao, retangulo))
+
+        # Pacote de produtos
+        produto1 = MathTex(r'2 = 2', color=WHITE)
+        produto1[0][0].set_color(BLUE)
+        produto1[0][2].set_color(BLUE)
+
+        produto2 = MathTex(r'6 = 2 \cdot 3', color=WHITE)
+        produto2[0][0].set_color(GREEN)
+        produto2[0][2].set_color(BLUE)
+        produto2[0][4].set_color(BLUE)
+
+        produto3 = MathTex(r'12 = 2 \cdot 2 \cdot 3', color=WHITE)
+        produto3[0][0:2].set_color(GREEN)
+        produto3[0][3].set_color(BLUE)
+        produto3[0][5].set_color(BLUE)
+        produto3[0][7].set_color(BLUE)
+
+        vgrupo_produtos = VGroup(produto1, produto2, produto3).arrange(DOWN, buff=0.5)
+
+        # Alinhando todos os produtos à esquerda, usando o primeiro como referência
+        for produto in vgrupo_produtos:
+            produto.align_to(produto1, LEFT)
+        vgrupo_produtos.next_to(vgrupo_teorema, 10*DOWN).shift(3*LEFT).scale(1.6)
+
+        # Segundo pacote de produtos
+        produto4 = MathTex(r'20 = 2 \cdot 2 \cdot 5', color=WHITE)
+        produto4[0][0:2].set_color(GREEN)
+        produto4[0][3].set_color(BLUE)
+        produto4[0][5].set_color(BLUE)
+        produto4[0][7].set_color(BLUE)
+
+        produto5 = MathTex(r'25 = 5 \cdot 5', color=WHITE)
+        produto5[0][0:2].set_color(GREEN)
+        produto5[0][3].set_color(BLUE)
+        produto5[0][5:7].set_color(BLUE)
+
+        produto6 = MathTex(r'31 = 31', color=WHITE)
+        produto6[0][0:2].set_color(BLUE)
+        produto6[0][3:5].set_color(BLUE)
+
+        vgrupo_produtos2 = VGroup(produto4, produto5, produto6).arrange(DOWN, buff=0.5)
+
+        # Alinhando todos os produtos à esquerda, usando o primeiro como referência
+        for produto in vgrupo_produtos2:
+            produto.align_to(produto4, LEFT)
+        vgrupo_produtos2.next_to(vgrupo_teorema, 10*DOWN).shift(3*RIGHT).scale(1.6)
+
+        #Animando produtos
+        self.play(Write(vgrupo_produtos))
+        self.wait(2)
+        self.play(Write(vgrupo_produtos2))
+        self.wait(3)
