@@ -1,0 +1,242 @@
+from manim import *
+
+class razao_trig(Scene):
+    def construct(self):
+
+        # Função para criar textos com um padrão
+        def criar_texto(conteudo, tamanho=40):
+            return Tex(conteudo, color=WHITE, font_size=tamanho)
+        
+        # Cena Inicial
+
+        # Título Inicial
+        titulo = criar_texto("Razões Trigonométricas").move_to(7*UP).scale(2.5)
+
+        # Adicionando o título
+        self.add(titulo)
+
+        # triângulo inicial
+        a = 2  # Comprimento do cateto a
+        b = 3  # Comprimento do cateto b
+
+        A0 = np.array([0, 0, 0])  # Vértice do ângulo reto
+        B0 = np.array([a, 0, 0])  # Base do triângulo
+        C0 = np.array([0, b, 0])  # Altura do triângulo
+
+        triangulo0 = Polygon(A0, B0, C0, color=PINK, fill_opacity=0.5).set_stroke(WHITE, width=4)
+        triangulo0.shift(0.7*LEFT+0.45*DOWN)
+
+        label_a0 = MathTex("a").next_to(triangulo0, DOWN, buff=0.3).scale(0.8)
+        label_b0 = MathTex("b").next_to(triangulo0, LEFT, buff=0.3).scale(0.8)
+        label_c0 = MathTex("c").move_to(triangulo0.get_edge_center(UP)+1.4*DOWN+0.5*RIGHT).scale(0.8)
+        
+        # Angulo reto
+        angulo_reto = RightAngle(Line(A0, B0), Line(A0, C0), length=0.3).move_to(triangulo0.get_vertices()[0]+0.15*UP+0.15*RIGHT)
+              
+        # Arcos dos outros ângulos
+        angulo_B = Arc(radius=0.5, start_angle=2*PI/3, angle=PI/4, color=WHITE).move_to(triangulo0.get_vertices()[1]+0.29*LEFT +0.135*UP)
+        angulo_C = Arc(radius=0.5, start_angle=3*PI/2, angle=PI/6, color=WHITE).move_to(triangulo0.get_vertices()[2]+0.4*DOWN+0.12*RIGHT)
+
+        # Rótulos dos ângulos
+        label_C = MathTex(r"\theta").next_to(angulo_C, DOWN, buff=0.1).shift(0.05*RIGHT+0.1*UP).set_color(WHITE).scale(0.5)
+        label_B = MathTex(r"\alpha").next_to(angulo_B, LEFT, buff=0.1).shift(0.11*RIGHT+0.11*UP).set_color(WHITE).scale(0.5)
+        
+        vgroup_label_inicial = VGroup(label_a0, label_b0, label_c0, angulo_reto, 
+                                      angulo_B, angulo_C, label_B, label_C)
+
+        vgroup_triangulo_inicial = VGroup(triangulo0, vgroup_label_inicial)
+        vgroup_triangulo_inicial.scale(1.9)
+        
+
+        # comentário
+        comentario = criar_texto("Triângulo de lados a, b e c")
+        comentario.next_to(titulo, 48*DOWN).scale(1.8)
+
+        #cena inicial
+        self.play(Create(triangulo0), Write(vgroup_label_inicial))
+        self.play(Write(comentario))
+
+        #mudando as cores
+        self.play(label_a0[0].animate.set_color(BLUE), comentario[0][17:18].animate.set_color(BLUE))
+        self.play(label_b0[0].animate.set_color(GREEN), comentario[0][19:20].animate.set_color(GREEN))
+        self.play(label_c0[0].animate.set_color(RED), comentario[0][21:22].animate.set_color(RED))
+        self.wait()
+
+        self.play(FadeOut(comentario))
+
+        # comentário sobre lados
+        comentario2 = criar_texto("Catetos e Hipotenusa")
+        comentario2.next_to(titulo, 48*DOWN).scale(2)
+
+        comentario2[0][0:7].set_color_by_gradient(BLUE,GREEN)
+        comentario2[0][8:18].set_color(RED)
+        
+        self.play(Write(comentario2))
+        self.wait()
+        self.play(FadeOut(comentario2))
+
+        #comentário sobre ângulos
+        comentario3 = criar_texto("Ângulos internos").set_color(YELLOW)
+        comentario3.next_to(titulo, 48*DOWN).scale(2)
+
+        angulo_reto.set_color(YELLOW)
+        label_B.set_color(YELLOW)
+        angulo_B.set_color(YELLOW)
+        label_C.set_color(YELLOW)
+        angulo_C.set_color(YELLOW)
+
+        self.play(Write(comentario3))
+        self.wait()
+        self.play(FadeOut(comentario3))
+
+
+        #Cena 2
+
+        #comentario inicial
+        comentario41 = criar_texto("Tomando")
+        comentario42 = MathTex(r'\theta', color=YELLOW).scale(0.8)
+        comentario43 = criar_texto("como referência")
+        vgrupo_comentario4 = VGroup(comentario41, comentario42, comentario43)
+        vgrupo_comentario4.arrange(RIGHT, buff=0.2).next_to(titulo, 48*DOWN).scale(1.8)
+
+        #animando
+        self.play(angulo_reto.animate.set_color(WHITE), 
+                  angulo_B.animate.set_color(WHITE), label_B.animate.set_color(WHITE),
+                  )
+        self.play(Write(vgrupo_comentario4))
+        self.play(Indicate(label_C, color = YELLOW, scale_factor=1.8), run_time=1.7)
+        self.wait()
+
+
+        #Cena 3
+
+        #criando vgrup
+        vgrupo_cena1 = VGroup(vgroup_triangulo_inicial, vgroup_label_inicial)
+        self.play(vgrupo_cena1.animate.scale(0.8))
+        self.play(vgrupo_cena1.animate.move_to(2.5*LEFT))
+        self.wait()
+       
+         
+        # equação seno
+        sin = MathTex(r'\text{sen } \theta = \frac{\text{cat oposto}}{\text{hipotenusa}}')
+        sin.move_to(2*RIGHT+4*UP).scale(1.3)
+        sin[0][0:4].set_color(YELLOW)
+        sin[0][5:14].set_color(BLUE)  # "cat oposto"
+        sin[0][15:25].set_color(RED)  # "hipotenusa"
+
+        sin2 = MathTex(r'\text{sen } \theta = \frac{\text{a}}{\text{c}}')
+        sin2.move_to(2*RIGHT+UP).scale(1.3)
+        sin2[0][0:4].set_color(YELLOW)
+        sin2[0][5:6].set_color(BLUE)  # "cat oposto"
+        sin2[0][7:8].set_color(RED)  # "hipotenusa"
+
+        # Destacando termos
+        retangulo1 = SurroundingRectangle(label_a0[0], color=BLUE, buff=0.2)
+        retangulo2 = SurroundingRectangle(label_c0[0], color=RED, buff=0.2)
+
+        self.play(FadeIn(sin), Create(retangulo1), Create(retangulo2))
+        self.wait()
+        self.play(FadeIn(sin2))
+        self.wait()
+        self.play(FadeOut(sin), FadeOut(retangulo1), FadeOut(retangulo2), FadeOut(sin2))
+
+
+        # equação cosseno
+        cos = MathTex(r'\text{cos } \theta = \frac{\text{cat adjacente}}{\text{hipotenusa}}')
+        cos.move_to(2*RIGHT+4*UP).scale(1.3)
+        cos[0][0:4].set_color(YELLOW)
+        cos[0][5:17].set_color(GREEN)  # "cat adjacente"
+        cos[0][18:30].set_color(RED)  # "hipotenusa"
+
+        cos2 = MathTex(r'\text{cos } \theta = \frac{\text{b}}{\text{c}}')
+        cos2.move_to(2*RIGHT+UP).scale(1.3)
+        cos2[0][0:4].set_color(YELLOW)
+        cos2[0][5:6].set_color(GREEN)  # "cat adjacente"
+        cos2[0][7:8].set_color(RED)  # "hipotenusa"
+
+        # Destacando termos
+        retangulo3 = SurroundingRectangle(label_b0[0], color=GREEN, buff=0.2)
+
+        self.play(FadeIn(cos), Create(retangulo3), Create(retangulo2))
+        self.wait()
+        self.play(FadeIn(cos2))
+        self.wait()
+        self.play(FadeOut(cos), FadeOut(retangulo2), FadeOut(retangulo3), FadeOut(cos2))
+
+
+        # equação tangente
+        tan = MathTex(r'\text{tan } \theta = \frac{\text{cat oposto}}{\text{cat adjacente}}')
+        tan.move_to(2*RIGHT+4*UP).scale(1.3)
+        tan[0][0:4].set_color(YELLOW)
+        tan[0][5:14].set_color(BLUE)  # "cat oposto"
+        tan[0][15:27].set_color(GREEN)  # "cat adjacente"
+
+        tan2 = MathTex(r'\text{tan } \theta = \frac{\text{sen } \theta}{\text{cos } \theta}')
+        tan2.move_to(2*RIGHT+UP).scale(1.3)
+        tan2[0][0:4].set_color(YELLOW)
+        tan2[0][5:10].set_color(BLUE)  # "cat adjacente"
+        tan2[0][10:15].set_color(GREEN)  # "cat oposto"
+
+        tan3 = MathTex(r'\text{tan } \theta = \frac{\text{a}}{\text{b}}')
+        tan3.move_to(2*RIGHT+UP).scale(1.3)
+        tan3[0][0:4].set_color(YELLOW)
+        tan3[0][5:6].set_color(BLUE)  # "cat adjacente"
+        tan3[0][7:8].set_color(GREEN)  # "cat oposto"
+
+        self.play(FadeIn(tan), Create(retangulo1), Create(retangulo3))
+        self.wait()
+        self.play(FadeIn(tan2))
+        self.wait()
+        self.play(FadeOut(tan2))
+        self.play(FadeIn(tan3))
+        self.wait()
+        self.play(FadeOut(tan), FadeOut(retangulo1), FadeOut(retangulo3))
+
+
+        # Juntando as três razões
+        sin2.move_to(2*RIGHT+4*UP).shift(2.5*LEFT)
+        cos2.move_to(2*RIGHT+4*UP).shift(1.5*RIGHT+0.1*UP)
+
+        self.play(FadeIn(sin2), FadeIn(cos2))
+        self.wait(3)
+
+        # Retirando conteúdo da tela
+        self.play(FadeOut(vgroup_label_inicial), FadeOut(vgroup_triangulo_inicial),
+                  FadeOut(tan3), FadeOut(sin2), FadeOut(cos2),
+                  FadeOut(vgrupo_comentario4), 
+                  FadeOut(vgrupo_cena1), FadeOut(triangulo0),
+                  )
+
+        # cena 4
+
+        #Comentário 
+
+        comentario5 = criar_texto("Principais valores")
+        comentario5.next_to(titulo, 48*DOWN).scale(2)
+
+        # Definição dos cabeçalhos e valores da tabela
+        headers = ["30^\\circ", "45^\\circ", "60^\\circ"]
+        row_labels = ["\\text{Seno}", "\\text{Cosseno}", "\\text{Tangente}"]
+        values = [
+            ["\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{3}}{2}"],
+            ["\\frac{\\sqrt{3}}{2}", "\\frac{\\sqrt{2}}{2}", "\\frac{1}{2}"],
+            ["\\frac{\\sqrt{3}}{3}", "1", "\\sqrt{3}"]
+        ]
+
+        # Criando a tabela com MathTable
+        table = MathTable(
+            values,
+            row_labels=[MathTex(label) for label in row_labels],
+            col_labels=[MathTex(h) for h in headers],
+            include_outer_lines=True
+        )
+
+        # Alterando a cor de todos os elementos internos da tabela para amarelo
+        table.get_entries().set_color(YELLOW)
+
+        table.shift(0.6*UP)
+
+        # Exibindo a tabela na cena
+        self.play(Write(comentario5))
+        self.play(Create(table), run_time=1.7)
+        self.wait(3)
